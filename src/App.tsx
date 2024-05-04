@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
+import { Job } from "./types/jobs";
 
 function App() {
-    const [jobData, setJobData] = useState<any>([]);
+    const [jobData, setJobData] = useState<Job[]>([]);
     const [page, setPage] = useState<number>(0);
 
     const observerTarget = useRef<HTMLDivElement>(null);
@@ -20,7 +21,7 @@ function App() {
         );
         const data = await response.json();
         console.log("file: App.tsx:189 ~ data:", data.jdList);
-        setJobData((prevPosts: any) => [...prevPosts, ...data.jdList]);
+        setJobData((prevPosts: Job[]) => [...prevPosts, ...data.jdList]);
         setPage((prevPage) => prevPage + 1);
     }, [page]);
 
@@ -50,13 +51,15 @@ function App() {
             {jobData.map((job, index) => (
                 <JobCard
                     key={index}
-                    title={job.jobRole}
+                    role={job.jobRole}
                     company={job.companyName}
-                    minSalary={job.minJdSalary}
+                    location={job.location}
                     maxSalary={job.maxJdSalary}
-                    description={job.jobDetailsFromCompany}
+                    minSalary={job.minJdSalary}
                     salaryCurrencyCode={job.salaryCurrencyCode}
                     minExp={job.minExp}
+                    description={job.jobDetailsFromCompany}
+                    logoUrl={job.logoUrl}
                 />
             ))}
             <div className="mb-5" ref={observerTarget}></div>

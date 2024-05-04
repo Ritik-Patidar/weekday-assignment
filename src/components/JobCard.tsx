@@ -1,13 +1,16 @@
 import { Paper } from "@mui/material";
+import { JobCardProps } from "../types/jobs";
 
-const JobCard: React.FC = ({
-    title,
+const JobCard: React.FC<JobCardProps> = ({
+    role,
     company,
-    minSalary,
     maxSalary,
+    minSalary,
+    minExp,
     description,
     salaryCurrencyCode,
-    minExp,
+    logoUrl,
+    location,
 }: any) => {
     const maxDescriptionLength = 100;
     const truncatedDescription = `${description.slice(
@@ -21,7 +24,7 @@ const JobCard: React.FC = ({
                 elevation={1}
                 className="bg-white !rounded-[20px] p-6"
             >
-                <h2 className="text-xl font-bold mb-2">{title}</h2>
+                <h2 className="text-xl font-bold mb-2">{role}</h2>
                 <p className="text-gray-600 mb-2">{company}</p>
                 <p className="text-green-600 mb-4">
                     Estimated Salary: {minSalary} - {maxSalary}{" "}
