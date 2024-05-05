@@ -52,7 +52,8 @@
 - `src/utils`: COntions utility functions.
 - `public`: Contains public assets.
 
-
+## Demo
+- [Live Demo](https://ritik-weekday-assignment.vercel.app/)
 
 ## Screenshots
 ![image](https://github.com/Ritik-Patidar/weekday-assignment/assets/67598349/dbf348c9-dbe0-4a2c-b7da-34c7725e48f7)
