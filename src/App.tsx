@@ -132,7 +132,6 @@ function App() {
                 sx={{
                     display: "flex",
                     flexFlow: "wrap",
-                    // width: "calc(100% - 24px)",
                     margin: "0 auto",
                     justifyContent: "center",
                 }}

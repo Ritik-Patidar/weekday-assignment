@@ -35,7 +35,7 @@ const Filters: React.FC<FiltersProps> = ({ jobData, setFilteredData }) => {
     };
 
     return (
-        <div className="flex gap-2 w-full my-4 flex-wrap">
+        <div className="flex justify-center gap-2 w-full my-4 flex-wrap">
             <Select
                 options={jobRoles.map((role) => ({ value: role, label: role }))}
                 onChange={(selectedOption) =>
@@ -87,7 +87,11 @@ const Filters: React.FC<FiltersProps> = ({ jobData, setFilteredData }) => {
             />
             <TextField
                 placeholder="Search Company Name"
-                sx={{ minHeight: "38px !important" }}
+                sx={{
+                    "& .MuiInputBase-root": {
+                        height: "38px !important",
+                    },
+                }}
                 variant="outlined"
                 onChange={(e) =>
                     handleFilterChange("companyName", e.target.value)

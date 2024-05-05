@@ -124,6 +124,10 @@ const JobCard: React.FC<JobCardProps> = ({
                         bgcolor: "background.paper",
                         boxShadow: 24,
                         p: 4,
+                        minWidth: 400,
+                        maxWidth: "80%",
+                        maxHeight: "80vh",
+                        overflowY: "auto",
                     }}
                 >
                     <Typography variant="h6" component="h2">
