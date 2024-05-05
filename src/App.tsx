@@ -4,6 +4,7 @@ import { FilterObject, Job } from "./types/jobs";
 import { Grid } from "@mui/material";
 import Filters from "./components/Filters";
 import debounce from "./utils/debounce";
+import { filterJobs } from "./utils/filter";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
@@ -14,67 +15,11 @@ function App() {
     const observerTarget = useRef<HTMLDivElement>(null);
 
     const filter = (jobs: Job[], filterObject: FilterObject) => {
-        const filterJobs = (jobs: Job[], filters: FilterObject) => {
-            return jobs.filter((job) => {
-                for (const key in filters) {
-                    if (
-                        !filters[key] ||
-                        (Array.isArray(filters[key]) &&
-                            filters[key].length === 0)
-                    ) {
-                        continue;
-                    }
-                    switch (key) {
-                        case "jobRole":
-                            if (
-                                !filters[key].some(
-                                    (filter: any) => job[key] === filter.value
-                                )
-                            ) {
-                                return false;
-                            }
-                            break;
-                        case "companyName":
-                            if (
-                                !job.companyName
-                                    .toLowerCase()
-                                    .includes(filters.companyName.toLowerCase())
-                            ) {
-                                return false;
-                            }
-                            break;
-                        case "minJdSalary":
-                            if (job.minJdSalary < filters.minJdSalary.value) {
-                                return false;
-                            }
-                            break;
-                        case "minExp":
-                            if (job.minExp < filters.minExp.value) {
-                                return false;
-                            }
-                            break;
-                        case "location":
-                            if (
-                                !filters[key].some(
-                                    (filter: any) =>
-                                        job[key].toLowerCase() ===
-                                        filter.value.toLowerCase()
-                                )
-                            ) {
-                                return false;
-                            }
-                            break;
-                    }
-                }
-                return true;
-            });
-        };
         const filteredJobs = filterJobs(jobs, filterObject);
-        console.log("file: App.tsx:70 ~ filteredJobs:", filteredJobs);
         setFilteredJobsData(filteredJobs);
     };
 
-    const debouncedFilter = useCallback(debounce(filter, 1000), [jobData]);
+    const debouncedFilter = useCallback(debounce(filter, 300), [jobData]);
 
     useEffect(() => {
         if (filteredObject) debouncedFilter(jobData, filteredObject);

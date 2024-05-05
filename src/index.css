@@ -1,3 +1,59 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  margin: 0;
+  line-height: inherit;
+}
+
+.job-card {
+  background-color: white;
+  border-radius: 20px;
+}
+
+.job-card__timer {
+  border-radius: 1rem;
+  border-width: 1px;
+  padding: 0.25rem 0.5rem;
+}
+
+.job-card__img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.job-card__company {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.job-card__location {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.job-card__description {
+  position: relative;
+  top: -20px;
+}
+
+.job-card__show-more {
+  color: #2563eb;
+  cursor: pointer;
+  text-align: center;
+}
+
+.job-card__show-more:hover {
+  color: #2563eb;
+}
+
+
+.job-card__experience {
+  color: #6b7280;
+}
