@@ -1,5 +1,6 @@
-import { Paper } from "@mui/material";
+import { Modal, Paper, Box, Typography } from "@mui/material";
 import { JobCardProps } from "../types/jobs";
+import { useState } from "react";
 
 const JobCard: React.FC<JobCardProps> = ({
     role,
@@ -11,7 +12,11 @@ const JobCard: React.FC<JobCardProps> = ({
     salaryCurrencyCode,
     logoUrl,
     location,
-}: any) => {
+}) => {
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     const maxDescriptionLength = 100;
     const truncatedDescription = `${description.slice(
         0,
@@ -33,7 +38,10 @@ const JobCard: React.FC<JobCardProps> = ({
                 <p className="text-gray-700 mb-4">
                     {truncatedDescription}{" "}
                     {description.length > maxDescriptionLength && (
-                        <button className="text-blue-500 hover:text-blue-700">
+                        <button
+                            className="text-blue-500 hover:text-blue-700"
+                            onClick={handleOpen}
+                        >
                             Show more
                         </button>
                     )}
@@ -53,6 +61,24 @@ const JobCard: React.FC<JobCardProps> = ({
                     </div>
                 </div>
             </Paper>
+            <Modal open={open} onClose={handleClose}>
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        bgcolor: "background.paper",
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <Typography variant="h6" component="h2">
+                        Job Description
+                    </Typography>
+                    <Typography sx={{ mt: 2 }}>{description}</Typography>
+                </Box>
+            </Modal>
         </>
     );
 };
