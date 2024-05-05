@@ -5,12 +5,15 @@ import { Grid } from "@mui/material";
 import Filters from "./components/Filters";
 import debounce from "./utils/debounce";
 import { filterJobs } from "./utils/filter";
+import { useFetchJdsMutation } from "./redux/services/job";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
     const [page, setPage] = useState<number>(0);
     const [filteredJobsData, setFilteredJobsData] = useState<Job[]>([]);
     const [filteredObject, setFilteredObject] = useState<FilterObject>();
+
+    const [fetchJds] = useFetchJdsMutation();
 
     const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -26,17 +29,9 @@ function App() {
     }, [debouncedFilter, filteredObject, jobData]);
 
     const fetchJobs = useCallback(async (): Promise<void> => {
-        const response = await fetch(
-            "https://api.weekday.technology/adhoc/getSampleJdJSON",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ offset: page, limit: 10 }),
-            }
-        );
-        const data = await response.json();
+        const response = await fetchJds({ offset: page, limit: 10 });
+        console.log("file: App.tsx:43 ~ response:", response);
+        const { data } = response as unknown as { data: { jdList: Job[] } };
 
         setJobData((prevPosts: Job[]) => [...prevPosts, ...data.jdList]);
         setFilteredJobsData((prevPosts: Job[]) => [

@@ -9,7 +9,7 @@ export const job = createApi({
   reducerPath: "job",
   baseQuery: baseQuery,
   endpoints: (builder) => ({
-    fetchJds: builder.mutation<{ [key: string]: number }, Job[]>({
+    fetchJds: builder.mutation<Job[], { [key: string]: number }>({
       query: (data) => ({
         url: "getSampleJdJSON",
         method: "POST",
