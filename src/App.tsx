@@ -1,17 +1,77 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
-import { Job, OptionType } from "./types/jobs";
+import { FilterObject, Job, OptionType } from "./types/jobs";
 import { Grid } from "@mui/material";
 import Filters from "./components/Filters";
+import debounce from "./utils/debounce";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
     const [page, setPage] = useState<number>(0);
-    const [filteredData, setFilteredData] = useState<
-        { [key: string]: OptionType } | undefined
-    >();
+    const [filteredJobsData, setFilteredJobsData] = useState<Job[]>([]);
+    const [filteredObject, setFilteredObject] = useState<FilterObject>();
 
     const observerTarget = useRef<HTMLDivElement>(null);
+
+    const filter = (jobs: Job[], filterObject: FilterObject) => {
+        const filterJobs = (jobs: Job[], filters: FilterObject) => {
+            return jobs.filter((job) => {
+                for (const key in filters) {
+                    switch (key) {
+                        case "jobRole":
+                            if (
+                                !filters[key].some(
+                                    (filter: any) => job[key] === filter.value
+                                )
+                            ) {
+                                return false;
+                            }
+                            break;
+                        case "companyName":
+                            if (
+                                !job.companyName
+                                    .toLowerCase()
+                                    .includes(filters.companyName.toLowerCase())
+                            ) {
+                                return false;
+                            }
+                            break;
+                        case "minJdSalary":
+                            if (job.minJdSalary < filters.minJdSalary.value) {
+                                return false;
+                            }
+                            break;
+                        case "minExp":
+                            if (job.minExp < filters.minExp.value) {
+                                return false;
+                            }
+                            break;
+                        case "location":
+                            if (
+                                !filters[key].some(
+                                    (filter: any) =>
+                                        job[key].toLowerCase() ===
+                                        filter.value.toLowerCase()
+                                )
+                            ) {
+                                return false;
+                            }
+                            break;
+                    }
+                }
+                return true;
+            });
+        };
+        const filteredJobs = filterJobs(jobs, filterObject);
+        console.log("file: App.tsx:70 ~ filteredJobs:", filteredJobs);
+        setFilteredJobsData(filteredJobs);
+    };
+
+    const debouncedFilter = useCallback(debounce(filter, 1000), [jobData]);
+
+    useEffect(() => {
+        if (filteredObject) debouncedFilter(jobData, filteredObject);
+    }, [debouncedFilter, filteredObject, jobData]);
 
     const fetchJobs = useCallback(async (): Promise<void> => {
         const response = await fetch(
@@ -25,8 +85,12 @@ function App() {
             }
         );
         const data = await response.json();
-        console.log("file: App.tsx:189 ~ data:", data.jdList);
+
         setJobData((prevPosts: Job[]) => [...prevPosts, ...data.jdList]);
+        setFilteredJobsData((prevPosts: Job[]) => [
+            ...prevPosts,
+            ...data.jdList,
+        ]);
         setPage((prevPage) => prevPage + 1);
     }, [page]);
 
@@ -53,7 +117,7 @@ function App() {
 
     return (
         <>
-            <Filters jobData={jobData} setFilteredData={setFilteredData} />
+            <Filters jobData={jobData} setFilteredData={setFilteredObject} />
             <Grid
                 container
                 spacing={{ xs: 3 }}
@@ -64,8 +128,8 @@ function App() {
                     width: "calc(100% - 24px)",
                 }}
             >
-                {jobData.map((job: Job) => (
-                    <Grid item xs={12} md={6} lg={4} key={job.jdUid}>
+                {filteredJobsData.map((job: Job) => (
+                    <Grid item xs={12} md={6} lg={4} key={index}>
                         <JobCard
                             role={job.jobRole}
                             company={job.companyName}

@@ -33,3 +33,8 @@ export type OptionType =
     | null
     | undefined
     | MultiValue<{ value: string; label: string }>;
+
+
+export interface FilterObject {
+    [key: string]: OptionType | undefined
+}
