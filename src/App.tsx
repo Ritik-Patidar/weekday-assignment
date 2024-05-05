@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
 import { Job } from "./types/jobs";
+import { Grid } from "@mui/material";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
@@ -48,20 +49,32 @@ function App() {
 
     return (
         <>
-            {jobData.map((job, index) => (
-                <JobCard
-                    key={index}
-                    role={job.jobRole}
-                    company={job.companyName}
-                    location={job.location}
-                    maxSalary={job.maxJdSalary}
-                    minSalary={job.minJdSalary}
-                    salaryCurrencyCode={job.salaryCurrencyCode}
-                    minExp={job.minExp}
-                    description={job.jobDetailsFromCompany}
-                    logoUrl={job.logoUrl}
-                />
-            ))}
+            <Grid
+                container
+                spacing={{ xs: 3 }}
+                p={2}
+                sx={{
+                    display: "flex",
+                    flexFlow: "wrap",
+                    width: "calc(100% - 24px)",
+                }}
+            >
+                {jobData.map((job: Job) => (
+                    <Grid item xs={12} md={6} lg={4} key={job.jdUid}>
+                        <JobCard
+                            role={job.jobRole}
+                            company={job.companyName}
+                            location={job.location}
+                            maxSalary={job.maxJdSalary}
+                            minSalary={job.minJdSalary}
+                            salaryCurrencyCode={job.salaryCurrencyCode}
+                            minExp={job.minExp}
+                            description={job.jobDetailsFromCompany}
+                            logoUrl={job.logoUrl}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
             <div className="mb-5" ref={observerTarget}></div>
         </>
     );
