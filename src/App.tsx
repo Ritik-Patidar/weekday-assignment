@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
 import { Job } from "./types/jobs";
 import { Grid } from "@mui/material";
+import Filters from "./components/Filters";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
@@ -49,6 +50,7 @@ function App() {
 
     return (
         <>
+            <Filters jobData={jobData} />
             <Grid
                 container
                 spacing={{ xs: 3 }}
