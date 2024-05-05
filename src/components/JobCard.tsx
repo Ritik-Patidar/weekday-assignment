@@ -87,7 +87,15 @@ const JobCard: React.FC<JobCardProps> = ({
                         <p className="text-gray-500"> Minimum Experience</p>
                         <p>{minExp || 0} Years</p>
                     </Box>
-                    <Button variant="contained" color="primary">
+                    <Button
+                        variant="contained"
+                        color="info"
+                        sx={{
+                            background: "#54efc3",
+                            color: "#000",
+                            fontWeight: 600,
+                        }}
+                    >
                         ⚡ Easy Apply
                     </Button>
                     <Button
