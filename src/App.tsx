@@ -22,7 +22,7 @@ function App() {
 
     const filter = (jobs: Job[], filterObject: FilterObject) => {
         const filteredJobs = filterJobs(jobs, filterObject);
-        if (filteredJobs.length === 0) {
+        if (filteredJobs.length === 0 && filterObject) {
             stopApiCall.current = true;
         } else {
             stopApiCall.current = false;
@@ -48,11 +48,10 @@ function App() {
         setFilteredJobsData((prevPosts: Job[]) => {
             const filtered = [
                 ...prevPosts,
-                ...(filteredObject
-                    ? filterJobs(data.jdList, filteredObject)
-                    : []),
+                // @ts-expect-error error fix
+                ...filterJobs(data.jdList, filteredObject),
             ];
-            if (filtered.length === 0) {
+            if (filtered.length === 0 && filteredObject) {
                 stopApiCall.current = true;
             } else {
                 stopApiCall.current = false;
