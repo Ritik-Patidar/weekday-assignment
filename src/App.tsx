@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
-import { Job } from "./types/jobs";
+import { Job, OptionType } from "./types/jobs";
 import { Grid } from "@mui/material";
 import Filters from "./components/Filters";
 
 function App() {
     const [jobData, setJobData] = useState<Job[]>([]);
     const [page, setPage] = useState<number>(0);
+    const [filteredData, setFilteredData] = useState<
+        { [key: string]: OptionType } | undefined
+    >();
 
     const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -50,7 +53,7 @@ function App() {
 
     return (
         <>
-            <Filters jobData={jobData} />
+            <Filters jobData={jobData} setFilteredData={setFilteredData} />
             <Grid
                 container
                 spacing={{ xs: 3 }}

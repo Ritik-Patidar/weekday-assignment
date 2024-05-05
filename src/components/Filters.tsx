@@ -1,13 +1,16 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Select from "react-select";
-import { Job } from "../types/jobs";
+import { Job, OptionType } from "../types/jobs";
 import { TextField } from "@mui/material";
 
 interface FiltersProps {
     jobData: Job[];
+    setFilteredData: Dispatch<
+        SetStateAction<{ [key: string]: OptionType } | undefined>
+    >;
 }
 
-const Filters: React.FC<FiltersProps> = ({ jobData }) => {
+const Filters: React.FC<FiltersProps> = ({ jobData, setFilteredData }) => {
     const jobRoles = [...new Set(jobData.map((job) => job.jobRole))];
     const experience = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const mode = ["Remote", "In-office", "Hybrid"];
@@ -24,15 +27,28 @@ const Filters: React.FC<FiltersProps> = ({ jobData }) => {
         { value: "10000+", label: "10000+" },
     ];
 
+    const handleFilterChange = (key: string, value: OptionType) => {
+        setFilteredData((pre: { [key: string]: OptionType } | undefined) => ({
+            ...pre,
+            [key]: value,
+        }));
+    };
+
     return (
         <div className="flex gap-2 w-full my-4 flex-wrap">
             <Select
                 options={jobRoles.map((role) => ({ value: role, label: role }))}
+                onChange={(selectedOption) =>
+                    handleFilterChange("jobRole", selectedOption)
+                }
                 placeholder="Roles"
                 isMulti
             />
             <Select
                 options={employees}
+                onChange={(selectedOption) =>
+                    handleFilterChange("employees", selectedOption)
+                }
                 placeholder="Number of Employees"
                 isMulti
             />
@@ -41,6 +57,9 @@ const Filters: React.FC<FiltersProps> = ({ jobData }) => {
                     value: company,
                     label: company,
                 }))}
+                onChange={(selectedOption) =>
+                    handleFilterChange("minExp", selectedOption)
+                }
                 placeholder="Experience"
                 isClearable
             />
@@ -49,6 +68,9 @@ const Filters: React.FC<FiltersProps> = ({ jobData }) => {
                     value: value,
                     label: value,
                 }))}
+                onChange={(selectedOption) =>
+                    handleFilterChange("location", selectedOption)
+                }
                 placeholder="Remote"
                 isMulti
             />
@@ -57,6 +79,9 @@ const Filters: React.FC<FiltersProps> = ({ jobData }) => {
                     value: value,
                     label: value + "USD",
                 }))}
+                onChange={(selectedOption) =>
+                    handleFilterChange("minJdSalary", selectedOption)
+                }
                 placeholder="Minimum Base Pay Salary"
                 isClearable
             />
@@ -64,6 +89,9 @@ const Filters: React.FC<FiltersProps> = ({ jobData }) => {
                 placeholder="Search Company Name"
                 sx={{ minHeight: "38px !important" }}
                 variant="outlined"
+                onChange={(e) =>
+                    handleFilterChange("companyName", e.target.value)
+                }
             />
         </div>
     );

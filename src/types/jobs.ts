@@ -1,3 +1,5 @@
+import { MultiValue, SingleValue } from "react-select";
+
 export interface Job {
     companyName: string;
     jdLink: string;
@@ -24,3 +26,10 @@ export interface JobCardProps {
     logoUrl: string;
     location: string;
 }
+
+export type OptionType =
+    | SingleValue<{ value: number | string; label: number | string }>
+    | string
+    | null
+    | undefined
+    | MultiValue<{ value: string; label: string }>;
