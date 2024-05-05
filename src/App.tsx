@@ -78,7 +78,6 @@ function App() {
                     display: "flex",
                     flexFlow: "wrap",
                     margin: "0 auto",
-                    justifyContent: "center",
                 }}
             >
                 {filteredJobsData.map((job: Job, index: number) => (
