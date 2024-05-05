@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import JobCard from "./components/JobCard";
-import { FilterObject, Job, OptionType } from "./types/jobs";
+import { FilterObject, Job } from "./types/jobs";
 import { Grid } from "@mui/material";
 import Filters from "./components/Filters";
 import debounce from "./utils/debounce";
@@ -17,6 +17,13 @@ function App() {
         const filterJobs = (jobs: Job[], filters: FilterObject) => {
             return jobs.filter((job) => {
                 for (const key in filters) {
+                    if (
+                        !filters[key] ||
+                        (Array.isArray(filters[key]) &&
+                            filters[key].length === 0)
+                    ) {
+                        continue;
+                    }
                     switch (key) {
                         case "jobRole":
                             if (
@@ -125,11 +132,23 @@ function App() {
                 sx={{
                     display: "flex",
                     flexFlow: "wrap",
-                    width: "calc(100% - 24px)",
+                    // width: "calc(100% - 24px)",
+                    margin: "0 auto",
+                    justifyContent: "center",
                 }}
             >
-                {filteredJobsData.map((job: Job) => (
-                    <Grid item xs={12} md={6} lg={4} key={index}>
+                {filteredJobsData.map((job: Job, index: number) => (
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        lg={4}
+                        key={index}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
                         <JobCard
                             role={job.jobRole}
                             company={job.companyName}
