@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { job } from "./services/job";
-import JobReducer from "./reducers/jobReducer";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      jobReducer: JobReducer,
       [job.reducerPath]: job.reducer,
     },
     middleware: (middleware) => middleware().concat(job.middleware),

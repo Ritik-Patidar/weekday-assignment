@@ -6,14 +6,15 @@ import Filters from "./components/Filters";
 import debounce from "./utils/debounce";
 import { filterJobs } from "./utils/filter";
 import { useFetchJdsMutation } from "./redux/services/job";
+import Loader from "./components/Loader";
 
 function App() {
+    const [fetchJds, { isLoading }] = useFetchJdsMutation();
+
     const [jobData, setJobData] = useState<Job[]>([]);
     const [page, setPage] = useState<number>(0);
     const [filteredJobsData, setFilteredJobsData] = useState<Job[]>([]);
     const [filteredObject, setFilteredObject] = useState<FilterObject>();
-
-    const [fetchJds] = useFetchJdsMutation();
 
     const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -30,7 +31,6 @@ function App() {
 
     const fetchJobs = useCallback(async (): Promise<void> => {
         const response = await fetchJds({ offset: page, limit: 10 });
-        console.log("file: App.tsx:43 ~ response:", response);
         const { data } = response as unknown as { data: { jdList: Job[] } };
 
         setJobData((prevPosts: Job[]) => [...prevPosts, ...data.jdList]);
@@ -39,7 +39,7 @@ function App() {
             ...data.jdList,
         ]);
         setPage((prevPage) => prevPage + 1);
-    }, [page]);
+    }, [fetchJds, page]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -100,6 +100,7 @@ function App() {
                         />
                     </Grid>
                 ))}
+                {isLoading && <Loader />}
             </Grid>
             <div className="mb-5" ref={observerTarget}></div>
         </>
