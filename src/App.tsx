@@ -25,10 +25,15 @@ function App() {
 
     const debouncedFilter = useCallback(debounce(filter, 300), [jobData]);
 
+    /* responsible for triggering the `debouncedFilter` function whenever there are changes in the 
+      dependencies specified in the dependency array
+    `[debouncedFilter, filteredObject, jobData]`. */
     useEffect(() => {
         if (filteredObject) debouncedFilter(jobData, filteredObject);
     }, [debouncedFilter, filteredObject, jobData]);
 
+    /*  It is an asynchronous function that fetches job data from the server using the `fetchJds` function
+    provided by the `useFetchJdsMutation` hook. */
     const fetchJobs = useCallback(async (): Promise<void> => {
         const response = await fetchJds({ offset: page, limit: 10 });
         const { data } = response as unknown as { data: { jdList: Job[] } };
@@ -41,6 +46,8 @@ function App() {
         setPage((prevPage) => prevPage + 1);
     }, [fetchJds, page]);
 
+    /* It is a side effect that is responsible for observing the target element and calling the `fetchJobs` function
+    whenever the target element is intersecting with the viewport. it is used for infinity scroll */
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
