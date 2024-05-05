@@ -13,7 +13,7 @@ interface FiltersProps {
 const Filters: React.FC<FiltersProps> = ({ jobData, setFilteredData }) => {
     const jobRoles = [...new Set(jobData.map((job) => job.jobRole))];
     const experience = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const mode = ["Remote", "In-office", "Hybrid"];
+    const locations = [...new Set(jobData.map((job) => job.location))];
     const minBase = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
     const employees = [
@@ -64,14 +64,14 @@ const Filters: React.FC<FiltersProps> = ({ jobData, setFilteredData }) => {
                 isClearable
             />
             <Select
-                options={mode.map((value) => ({
+                options={locations.map((value) => ({
                     value: value,
                     label: value,
                 }))}
                 onChange={(selectedOption) =>
                     handleFilterChange("location", selectedOption)
                 }
-                placeholder="Remote"
+                placeholder="Location"
                 isMulti
             />
             <Select

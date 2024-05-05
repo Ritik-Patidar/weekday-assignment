@@ -18,8 +18,15 @@ function App() {
 
     const observerTarget = useRef<HTMLDivElement>(null);
 
+    const stopApiCall = useRef<boolean>(false);
+
     const filter = (jobs: Job[], filterObject: FilterObject) => {
         const filteredJobs = filterJobs(jobs, filterObject);
+        if (filteredJobs.length === 0) {
+            stopApiCall.current = true;
+        } else {
+            stopApiCall.current = false;
+        }
         setFilteredJobsData(filteredJobs);
     };
 
@@ -30,19 +37,28 @@ function App() {
     `[debouncedFilter, filteredObject, jobData]`. */
     useEffect(() => {
         if (filteredObject) debouncedFilter(jobData, filteredObject);
-    }, [debouncedFilter, filteredObject, jobData]);
+    }, [debouncedFilter, filteredObject]);
 
     /*  It is an asynchronous function that fetches job data from the server using the `fetchJds` function
     provided by the `useFetchJdsMutation` hook. */
     const fetchJobs = useCallback(async (): Promise<void> => {
         const response = await fetchJds({ offset: page, limit: 10 });
         const { data } = response as unknown as { data: { jdList: Job[] } };
-
         setJobData((prevPosts: Job[]) => [...prevPosts, ...data.jdList]);
-        setFilteredJobsData((prevPosts: Job[]) => [
-            ...prevPosts,
-            ...data.jdList,
-        ]);
+        setFilteredJobsData((prevPosts: Job[]) => {
+            const filtered = [
+                ...prevPosts,
+                ...(filteredObject
+                    ? filterJobs(data.jdList, filteredObject)
+                    : []),
+            ];
+            if (filtered.length === 0) {
+                stopApiCall.current = true;
+            } else {
+                stopApiCall.current = false;
+            }
+            return filtered;
+        });
         setPage((prevPage) => prevPage + 1);
     }, [fetchJds, page]);
 
@@ -51,7 +67,7 @@ function App() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting) {
+                if (entries[0].isIntersecting && !stopApiCall.current) {
                     fetchJobs();
                 }
             },
@@ -109,7 +125,10 @@ function App() {
                 ))}
                 {isLoading && <Loader />}
             </Grid>
-            <div className="mb-5" ref={observerTarget}></div>
+            <div className="mb-2" ref={observerTarget}></div>
+            {stopApiCall.current && (
+                <p className="text-center">No Record Found </p>
+            )}
         </>
     );
 }
